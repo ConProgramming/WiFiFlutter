@@ -538,8 +538,9 @@ public class WifiIotPlugin implements MethodCallHandler, EventChannel.StreamHand
                 String password = poCall.argument("password");
                 String security = poCall.argument("security");
                 Boolean joinOnce = poCall.argument("join_once");
+	    	Boolean hidden = poCall.argument("hidden");
 
-                final boolean connected = connectTo(ssid, password, security, joinOnce);
+                final boolean connected = connectTo(ssid, password, security, joinOnce, hidden);
                 
 				final Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
@@ -566,6 +567,7 @@ public class WifiIotPlugin implements MethodCallHandler, EventChannel.StreamHand
                 String ssid = poCall.argument("ssid");
                 String password = poCall.argument("password");
                 Boolean joinOnce = poCall.argument("join_once");
+		Boolean hidden = poCall.argument("hidden");
 
                 String security = null;
                 List<ScanResult> results = moWiFi.getScanResults();
@@ -576,7 +578,7 @@ public class WifiIotPlugin implements MethodCallHandler, EventChannel.StreamHand
                     }
                 }
 
-                final boolean connected = connectTo(ssid, password, security, joinOnce);
+                final boolean connected = connectTo(ssid, password, security, joinOnce, hidden);
 
 				final Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
@@ -725,13 +727,15 @@ public class WifiIotPlugin implements MethodCallHandler, EventChannel.StreamHand
     }
 
     /// Method to connect to WIFI Network
-    private Boolean connectTo(String ssid, String password, String security, Boolean joinOnce) {
+    private Boolean connectTo(String ssid, String password, String security, Boolean joinOnce, Boolean hidden) {
         /// Make new configuration
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + ssid + "\"";
 
         if (security != null) security = security.toUpperCase();
         else security = "NONE";
+	    
+	if (hidden) conf.hiddenSSID = true;
 
         if (security.toUpperCase().equals("WPA")) {
 
