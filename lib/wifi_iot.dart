@@ -204,7 +204,7 @@ class WiFiForIoTPlugin {
       {String password,
       NetworkSecurity security = NetworkSecurity.NONE,
       bool joinOnce = true,
-      bool hidden = true}) async {
+      bool hidden = false}) async {
     if (!Platform.isIOS && !await isEnabled()) await setEnabled(true);
     bool bResult;
     try {
@@ -223,7 +223,7 @@ class WiFiForIoTPlugin {
   }
 
   static Future<bool> findAndConnect(String ssid,
-      {String password, bool joinOnce = true, bool hidden = true}) async {
+      {String password, bool joinOnce = true, bool hidden = false}) async {
     if (!await isEnabled()) {
       await setEnabled(true);
     }
